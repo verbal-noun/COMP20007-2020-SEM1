@@ -1,0 +1,23 @@
+// Brute force 
+function subset(S, t): 
+    powerSet = powerSet(S)
+
+    for set in powerSet 
+        if sum(set) == t 
+            return True 
+
+    return False 
+
+
+Question 2 
+
+function partitionSum(S[n]): 
+    # Create two list with upto that number 
+
+
+    # using subset sum:
+    if is_even(sum(s)): 
+        subset = subsetSum(S, sum(S)/2)
+        return subset, s-subset
+    else: 
+        return False  
