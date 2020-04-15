@@ -169,8 +169,27 @@ void print_deque(Deque *deque) {
 
 // Reverse the Deque using an iterative approach
 void iterative_reverse(Deque *deque) {
-  // You should remove this line and replace it with your own code:
-  exit_with_error("iterative_reverse not implemented");
+  Node *prev = new_node(0); 
+  Node *curr = deque->top; 
+  Node *next;
+
+  while(curr != NULL) {
+    next = curr->next;
+    curr->next = prev;
+    curr->prev = next;
+    prev = curr;
+    curr = next; 
+  }
+  Node *temp; 
+  temp = deque->top; 
+  deque->top = deque->bottom;
+  deque->bottom = temp; 
+
+  free_node(deque->bottom->next); 
+  free_node(curr);
+  free_node(temp);
+
+  deque->bottom->next = NULL;
 }
 
 // Reverse the Deque using a recursive approach
