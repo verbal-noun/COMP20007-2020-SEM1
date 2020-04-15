@@ -61,6 +61,7 @@ void test_split();
 void test_parkranger();
 
 int main(int argc, char **argv) {
+  
   int opt = get_option(argc, argv);
 
   if (opt == OPT_ITERATIVE) {
@@ -72,7 +73,7 @@ int main(int argc, char **argv) {
   } else if (opt == OPT_PARKRANGER) {
     test_parkranger();
   }
-
+  
   return 0;
 }
 

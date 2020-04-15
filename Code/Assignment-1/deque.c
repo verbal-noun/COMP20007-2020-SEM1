@@ -169,6 +169,10 @@ void print_deque(Deque *deque) {
 
 // Reverse the Deque using an iterative approach
 void iterative_reverse(Deque *deque) {
+  if(deque->size == 0) {
+    return;
+  }
+
   Node *prev = new_node(0); 
   Node *curr = deque->top; 
   Node *next;
