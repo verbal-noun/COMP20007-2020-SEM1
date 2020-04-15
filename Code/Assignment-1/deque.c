@@ -198,8 +198,19 @@ void iterative_reverse(Deque *deque) {
 
 // Reverse the Deque using a recursive approach
 void recursive_reverse(Deque *deque) {
-  // You should remove this line and replace it with your own code:
-  exit_with_error("recursive_reverse not implemented");
+  
+  if(deque->size == 0 || deque->size == 1) {
+    return; 
+  }
+
+  recurse(deque->top);
+  Node *temp = deque->top;
+  deque->top = deque->bottom;
+  deque->bottom = temp; 
+
+  temp = NULL;
+  free_node(temp);
+  
 }
 
 // Split the Deque given a critical value k, such that the Deque contains
@@ -216,3 +227,17 @@ void split_deque(Deque *deque, int k) {
 }
 
 // TODO: Add any other functions you might need for your Deque module
+
+void recurse(Node *node) {
+  if(node == NULL) {
+    return;
+  }
+  
+  Node* next = node->next; 
+  node->next = node->prev;
+  node->prev = next;
+
+  recurse(node->prev);
+  next = NULL;
+  free_node(next);
+}

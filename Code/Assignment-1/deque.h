@@ -88,5 +88,6 @@ void recursive_reverse(Deque *deque);
 void split_deque(Deque *deque, int k);
 
 // TODO: Add any other functions you might need for your Deque module
+void recurse(Node *node);
 
 #endif
