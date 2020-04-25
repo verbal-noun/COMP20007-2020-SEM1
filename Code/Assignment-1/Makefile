@@ -5,7 +5,7 @@
 # changes by <Insert Name Here>
 
 # The compiler flags used when compiling
-CFLAGS=-Wall -Wno-comment
+CFLAGS=-g -Wall -Wno-comment
 
 a1: main.o deque.o parkranger.o util.o
 	gcc $(CFLAGS) -o a1 main.o deque.o parkranger.o util.o

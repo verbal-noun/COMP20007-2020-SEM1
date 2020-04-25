@@ -55,5 +55,6 @@
 bool is_single_run_possible();
 
 // TODO: Add any additional functions or types required to solve this problem.
-
+int dfs_explore(int node, Deque *adj_list[]);
+int max(int num1, int num2);
 #endif

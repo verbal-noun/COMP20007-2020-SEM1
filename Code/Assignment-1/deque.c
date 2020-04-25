@@ -202,7 +202,7 @@ void iterative_reverse(Deque *deque)
     return;
   }
 
-  Node *prev = new_node(0);
+  Node *prev = NULL;
   Node *curr = deque->top;
   Node *next;
 
@@ -219,10 +219,12 @@ void iterative_reverse(Deque *deque)
   deque->top = deque->bottom;
   deque->bottom = temp;
 
-  free_node(deque->bottom->next);
+  temp = NULL;
+  prev = NULL;
   free_node(curr);
   free_node(temp);
-
+  free_node(prev);
+  deque->top->prev = NULL;
   deque->bottom->next = NULL;
 }
 
@@ -269,8 +271,6 @@ void split_deque(Deque *deque, int k)
     temp = temp->next;
   }
 
-  before->bottom->next = after->top;
-
   temp = deque->top; 
   while(temp != NULL) {
     Node *prev = temp;
@@ -279,8 +279,22 @@ void split_deque(Deque *deque, int k)
   }  
   free_node(temp); 
 
-  deque->top = before->top; 
-  deque->bottom = after->bottom; 
+  if(before->size == 0) {
+    deque->top = after->top;
+    deque->bottom = after->bottom; 
+    free_deque(before);
+  } else if(after->size == 0) {
+    deque->top = before->top;
+    deque->bottom = before->bottom; 
+    free_deque(after);
+
+  } else { 
+    before->bottom->next = after->top;
+    after->top->prev = before->bottom;
+    deque->top = before->top; 
+    deque->bottom = after->bottom;
+  }
+   
 }
 
 // TODO: Add any other functions you might need for your Deque module 
