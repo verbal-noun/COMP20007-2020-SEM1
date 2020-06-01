@@ -1,21 +1,34 @@
 #include <stdio.h> 
+#include <stdlib.h>
+#include <string.h> 
+
+void change_value(int a );
 
 int main(int argc, char const *argv[])
 {
     /* code */
-    char str[256];
-    int size = 0;
-    int c = EOF;
-    while((c = getchar()) != '\n' && c != EOF) {
-        str[size++] = (char) c;
-    }
-    str[size] = '\0';
-
-    printf("%s\n", str);
+    int num = 0, mod = 0, k = 0; 
+    scanf("%d %d %d", &num, &mod, &k);
+    int *size = &mod; 
+    *size = *size + 1;
+    printf("%d\n", mod);
+    printf("%d\n", *size);
     
-    return 0;
+//   // Create empty hash table 
+//     char **hash_table = malloc(mod * sizeof(char*)); 
+//     for(int i = 0; i < mod; i++) {
+//         hash_table[i] = malloc(257 * sizeof(char));
+//     }
+
+//     for(int i = 0; i < mod; i++) {
+//         strcpy(hash_table[i], "@");
+//     }
+
+//     for(int i = 0; i < mod; i++) {
+//         printf("%s\n", hash_table[i]);
+//     }
 }
 
-char *input_string() { 
-    
+void change_value(int a ){
+    a++; 
 }

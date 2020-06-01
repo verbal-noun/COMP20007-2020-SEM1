@@ -42,5 +42,7 @@ int generate_value(char c);
 //   (M-2): str_q
 //   (M-1):
 void problem_1_b();
-
+int insert_hash(char str[], int str_size, char **hash_table, int *size, int step);
+char **resize_hash(char **hash_table, int *table_size, int step);
+void free_table(char **table, int size);
 #endif

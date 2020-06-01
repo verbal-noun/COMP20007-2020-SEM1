@@ -5,7 +5,7 @@
 # changes by <Insert Name Here>
 
 # The compiler flags used when compiling
-CFLAGS=-g-Wall -Wno-comment -std=c99
+CFLAGS=-g -Wall -Wno-comment -std=c99
 
 a2: main.o hash.o text_analysis.o
 	gcc $(CFLAGS) -o a2 main.o hash.o text_analysis.o
