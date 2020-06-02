@@ -8,7 +8,10 @@
 
 #ifndef TEXT_ANALYSIS_H
 #define TEXT_ANALYSIS_H
-
+#define MAX_SIZE 26
+#define TRUE 1
+#define FALSE 0 
+#define MAX_WORD 100
 // Build a character level trie for a given set of words.
 //
 // The input to your program is an integer N followed by N lines containing
@@ -19,8 +22,20 @@
 //
 // Your program must output the pre-order traversal of the characters in
 // the trie, on a single line.
-void problem_2_a();
+typedef struct Node TrieNode; 
 
+struct Node {
+    TrieNode *children[MAX_SIZE];
+    int freq;
+    int endWord; 
+
+};  
+
+void problem_2_a();
+TrieNode *create_node();
+void insert_word(TrieNode *root, char* word);
+void *read_word(); 
+void preorder_traverse(TrieNode *root, int index);
 // Using the trie constructed in Part (a) this program should output all
 // prefixes of length K, in alphabetic order along with their frequencies
 // with their frequencies. The input will be:

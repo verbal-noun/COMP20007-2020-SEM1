@@ -34,7 +34,7 @@ void problem_1_a() {
     int size = 0;
     int c = EOF;
     int hash = 0; 
-
+    
     while((c = getchar()) != '\n' && c != EOF) {
       str[size++] = (char) c;
     }
@@ -123,7 +123,7 @@ void problem_1_b() {
     char str[257];
     int size = 0;
     char c = EOF;
-
+    // Input a single line 
     while((c = getchar()) != '\n' && c != EOF) {
       str[size++] = (char) c;
     }
@@ -160,11 +160,13 @@ int insert_hash(char str[], int str_size, char **hash_table, int *size, int step
       strcpy(hash_table[hash], str);
       return 1;
     }
-    for(int i = ind; i < *size; i += step){
-      if(!strcmp(hash_table[i], NULLCHAR)) {
-        strcpy(hash_table[i], str);
+    // Item already in place, try to put it in K steps
+    while(ind != hash) {
+      if(!strcmp(hash_table[ind], NULLCHAR)) {
+        strcpy(hash_table[ind], str);
         return 1;
       }
+      ind = (ind + step) % (*size);
     }
   return 0;
 }

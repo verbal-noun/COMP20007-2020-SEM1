@@ -7,7 +7,10 @@
  */
 
 #include "text_analysis.h"
-
+#include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
+#include <assert.h>
 // Build a character level trie for a given set of words.
 //
 // The input to your program is an integer N followed by N lines containing
@@ -19,9 +22,86 @@
 // Your program must output the pre-order traversal of the characters in
 // the trie, on a single line.
 void problem_2_a() {
-  // TODO: Implement Me!
+  // Generate a blank trie 
+  TrieNode *root = create_node();
+  // Populate the Trie with words 
+  int num = 0; 
+  scanf("%d", &num);
+  getchar();
+  for(int i = 0; i < num; i++) {
+    // Each each line
+    char word[MAX_WORD];
+    read_word(word);
+    insert_word(root, word);
+  }
+  // Perform preorder traversal of the trie
+  printf("^\n"); 
+  for(int i = 0; i < MAX_SIZE; i++) {
+    if(root->children[i]){
+      preorder_traverse(root->children[i], i);
+    }
+    
+  }
 }
 
+TrieNode *create_node() {
+  TrieNode *new_node = NULL;
+  new_node = (TrieNode*)malloc(sizeof(TrieNode));
+  assert(new_node);
+  
+  if(new_node) {
+    new_node->endWord = FALSE;
+
+    for(int i = 0; i < MAX_SIZE; i++) {
+      new_node->children[i] = NULL;
+    }
+  }
+
+  return new_node;
+}
+
+void insert_word(TrieNode *root, char* word) {
+  int level = 0, index = 0; 
+  int length = strlen(word);
+
+  TrieNode *curr = root;
+  for(level = 0; level < length; level++) {
+    index = word[level] - 'a';
+    if(!curr->children[index]) {
+      curr->children[index] = create_node();
+      
+    }
+    curr = curr->children[index]; 
+  }
+  curr->endWord = TRUE;
+}
+
+void *read_word(char *str) {
+  int size = 0;
+  char c = EOF;
+  // Input a single line 
+  while((c = getchar()) != '\n' && c != EOF) {
+    str[size++] = (char) c;
+  }
+  str[size] = '\0';
+
+  return str;
+}
+
+void preorder_traverse(TrieNode *root, int index) {
+  char ch = 'a' + index;
+  printf("%c\n", ch);
+  // The word contains an end word as well 
+  if(root->endWord) {
+    printf("$\n");
+  }
+
+  for(int i = 0; i < MAX_SIZE; i++) {
+    if(root->children[i]) {
+      preorder_traverse(root->children[i], i);
+    }
+  }
+}
 // Using the trie constructed in Part (a) this program should output all
 // prefixes of length K, in alphabetic order along with their frequencies
 // with their frequencies. The input will be:
