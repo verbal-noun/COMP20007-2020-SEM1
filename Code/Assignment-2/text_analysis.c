@@ -25,15 +25,18 @@ void problem_2_a() {
   // Generate a blank trie 
   TrieNode *root = create_node();
   // Populate the Trie with words 
-  int num = 0; 
+  int num = 0;
+  // Input number of words  
   scanf("%d", &num);
   getchar();
+  // Read words from stdin and insert into trie 
   for(int i = 0; i < num; i++) {
     // Each each line
     char word[MAX_WORD];
     read_word(word);
     insert_word(root, word);
   }
+
   // Perform preorder traversal of the trie
   printf("^\n"); 
   for(int i = 0; i < MAX_SIZE; i++) {
@@ -42,13 +45,17 @@ void problem_2_a() {
     }
     
   }
+  
+  // Recursively free memory allocated for trie 
+  free_node(root);
 }
 
 TrieNode *create_node() {
+  // Allocate memory for a new node 
   TrieNode *new_node = NULL;
   new_node = (TrieNode*)malloc(sizeof(TrieNode));
   assert(new_node);
-  
+  // Initialise node with NULL
   if(new_node) {
     new_node->endWord = FALSE;
 
@@ -67,12 +74,19 @@ void insert_word(TrieNode *root, char* word) {
   TrieNode *curr = root;
   for(level = 0; level < length; level++) {
     index = word[level] - 'a';
+    // If character doesn't exist in trie level 
     if(!curr->children[index]) {
       curr->children[index] = create_node();
-      
+      curr->children[index]->freq = 1; 
     }
+    // Increase frequency of the character 
+    else{
+      curr->children[index]->freq++;
+    }
+    // Move into next level 
     curr = curr->children[index]; 
   }
+  // Mark the end of a word 
   curr->endWord = TRUE;
 }
 
@@ -102,6 +116,16 @@ void preorder_traverse(TrieNode *root, int index) {
     }
   }
 }
+
+void free_node(TrieNode *root) {
+  for(int i = 0; i < MAX_SIZE; i++) {
+    if(root->children[i]) {
+      free_node(root->children[i]);
+    }
+  }
+
+  free(root);
+}
 // Using the trie constructed in Part (a) this program should output all
 // prefixes of length K, in alphabetic order along with their frequencies
 // with their frequencies. The input will be:
@@ -116,7 +140,52 @@ void preorder_traverse(TrieNode *root, int index) {
 //   ...
 //   ye 1
 void problem_2_b() {
-  // TODO: Implement Me!
+  // Take input of n & k 
+  int num = 0, k = 0; 
+  scanf("%d %d", &num, &k);
+  getchar();
+
+  // Initiate an empty trie 
+  TrieNode *root = create_node();
+  // Read word from stdin and insert into trie 
+  for(int i = 0; i < num; i++) {
+    // Each each line
+    char word[MAX_WORD];
+    read_word(word);
+    insert_word(root, word);
+  }
+  
+  // Recursively look for prefix with fixed size of k 
+  char prefix[k+1];
+  recursive_search(root, -1, 0, k, prefix);
+
+  // Free memory allocated for trie 
+  free_node(root);
+}
+
+void recursive_search(TrieNode *node, int level, int index, int size, char prefix[]) {
+  
+  
+  // Base case 
+  if(level + 1 == size && index >= 0) {
+    char ch = 'a' + index;
+    prefix[level] = ch;
+    prefix[level+1] = '\0'; 
+    printf("%s %d\n", prefix, node->freq);
+    return; 
+  }
+  // Normal case
+  else {
+    for(int i = 0; i < MAX_SIZE; i++) {
+      if(node->children[i]) {
+        char ch = 'a' + i;
+        prefix[level+1] = ch; 
+        recursive_search(node->children[i], level+1, i, size, prefix);
+      }
+      
+    }
+  }
+  
 }
 
 // Again using the trie data structure you implemented for Part (a) you will

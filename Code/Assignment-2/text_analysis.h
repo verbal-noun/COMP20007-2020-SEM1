@@ -36,6 +36,7 @@ TrieNode *create_node();
 void insert_word(TrieNode *root, char* word);
 void *read_word(); 
 void preorder_traverse(TrieNode *root, int index);
+void free_node(TrieNode *root);
 // Using the trie constructed in Part (a) this program should output all
 // prefixes of length K, in alphabetic order along with their frequencies
 // with their frequencies. The input will be:
@@ -50,6 +51,7 @@ void preorder_traverse(TrieNode *root, int index);
 //   ...
 //   ye 1
 void problem_2_b();
+void recursive_search(TrieNode *node, int level, int index, int size, char prefix[]);
 
 // Again using the trie data structure you implemented for Part (a) you will
 // provide a list (up to 5) of the most probable word completions for a given
