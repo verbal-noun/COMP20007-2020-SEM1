@@ -7,17 +7,24 @@
 # The compiler flags used when compiling
 CFLAGS=-g -Wall -Wno-comment -std=c99
 
-a2: main.o hash.o text_analysis.o
-	gcc $(CFLAGS) -o a2 main.o hash.o text_analysis.o
+a2: main.o hash.o text_analysis.o deque.o util.o
+	gcc $(CFLAGS) -o a2 main.o hash.o text_analysis.o deque.o util.o
 
-main.o: main.c hash.h text_analysis.h
+main.o: main.c hash.h text_analysis.h deque.h util.h
 	gcc $(CFLAGS) -c main.c
 
 hash.o: hash.c hash.h
 	gcc $(CFLAGS) -c hash.c
 
-text_analysis.o: text_analysis.c text_analysis.h
+text_analysis.o: text_analysis.c text_analysis.h deque.h util.h
 	gcc $(CFLAGS) -c text_analysis.c
+
+deque.o: deque.c deque.h util.h
+	gcc $(CFLAGS) -c deque.c
+
+util.o: util.c util.h
+	gcc $(CFLAGS) -c util.c
+
 
 # Add or update any of these rules to include additional files/modules you may
 # include. You can add additional compiler flags as well, however you should

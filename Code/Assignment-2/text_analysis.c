@@ -7,10 +7,7 @@
  */
 
 #include "text_analysis.h"
-#include <stdio.h>
-#include <stdlib.h>
-#include <string.h>
-#include <assert.h>
+
 // Build a character level trie for a given set of words.
 //
 // The input to your program is an integer N followed by N lines containing
@@ -27,8 +24,7 @@ void problem_2_a() {
   // Populate the Trie with words 
   int num = 0;
   // Input number of words  
-  scanf("%d", &num);
-  getchar();
+  scanf("%d\n", &num);
   // Read words from stdin and insert into trie 
   for(int i = 0; i < num; i++) {
     // Each each line
@@ -47,7 +43,7 @@ void problem_2_a() {
   }
   
   // Recursively free memory allocated for trie 
-  free_node(root);
+  free_trie(root);
 }
 
 TrieNode *create_node() {
@@ -57,7 +53,7 @@ TrieNode *create_node() {
   assert(new_node);
   // Initialise node with NULL
   if(new_node) {
-    new_node->endWord = FALSE;
+    new_node->is_word = FALSE;
 
     for(int i = 0; i < MAX_SIZE; i++) {
       new_node->children[i] = NULL;
@@ -87,26 +83,14 @@ void insert_word(TrieNode *root, char* word) {
     curr = curr->children[index]; 
   }
   // Mark the end of a word 
-  curr->endWord = TRUE;
-}
-
-void *read_word(char *str) {
-  int size = 0;
-  char c = EOF;
-  // Input a single line 
-  while((c = getchar()) != '\n' && c != EOF) {
-    str[size++] = (char) c;
-  }
-  str[size] = '\0';
-
-  return str;
+  curr->is_word++;
 }
 
 void preorder_traverse(TrieNode *root, int index) {
   char ch = 'a' + index;
   printf("%c\n", ch);
   // The word contains an end word as well 
-  if(root->endWord) {
+  if(root->is_word != 0) {
     printf("$\n");
   }
 
@@ -117,15 +101,17 @@ void preorder_traverse(TrieNode *root, int index) {
   }
 }
 
-void free_node(TrieNode *root) {
+void free_trie(TrieNode *root) {
   for(int i = 0; i < MAX_SIZE; i++) {
     if(root->children[i]) {
-      free_node(root->children[i]);
+      free_trie(root->children[i]);
     }
   }
 
   free(root);
 }
+
+//----------------------------------------- 2b ------------------------------//
 // Using the trie constructed in Part (a) this program should output all
 // prefixes of length K, in alphabetic order along with their frequencies
 // with their frequencies. The input will be:
@@ -142,8 +128,7 @@ void free_node(TrieNode *root) {
 void problem_2_b() {
   // Take input of n & k 
   int num = 0, k = 0; 
-  scanf("%d %d", &num, &k);
-  getchar();
+  scanf("%d %d\n", &num, &k);
 
   // Initiate an empty trie 
   TrieNode *root = create_node();
@@ -157,17 +142,17 @@ void problem_2_b() {
   
   // Recursively look for prefix with fixed size of k 
   char prefix[k+1];
+  // -1 is passed as index has root level has no words 
   recursive_search(root, -1, 0, k, prefix);
 
   // Free memory allocated for trie 
-  free_node(root);
+  free_trie(root);
 }
 
+
 void recursive_search(TrieNode *node, int level, int index, int size, char prefix[]) {
-  
-  
   // Base case 
-  if(level + 1 == size && index >= 0) {
+  if(level + 1 == size) {
     char ch = 'a' + index;
     prefix[level] = ch;
     prefix[level+1] = '\0'; 
@@ -188,6 +173,7 @@ void recursive_search(TrieNode *node, int level, int index, int size, char prefi
   
 }
 
+//------------------------------------- 2c ---------------------------------------//
 // Again using the trie data structure you implemented for Part (a) you will
 // provide a list (up to 5) of the most probable word completions for a given
 // word stub.
@@ -216,5 +202,102 @@ void recursive_search(TrieNode *node, int level, int index, int size, char prefi
 // If there are two strings with the same probability ties should be broken
 // alphabetically (with "a" coming before "aa").
 void problem_2_c() {
-  // TODO: Implement Me!
+  // Take number of strings and word stub 
+  int num = 0; 
+  char stub[MAX_WORD]; 
+  scanf("%d\n", &num);
+  read_word(stub);
+
+  // Build the trie from the input words 
+  TrieNode *root = create_node();
+  for(int i = 0; i < num; i++) {
+    char word[MAX_WORD];
+    read_word(word);
+    insert_word(root, word);
+  }
+
+  
+  // Find the matching words with highest frequency 
+  get_high_freq(root, stub);
+}
+
+
+
+void get_high_freq(TrieNode *root, char word[MAX_WORD]) {
+  // Move to the end of word stub
+  TrieNode *temp = root;   
+  for(int i = 0; i < strlen(word); i++) {
+    int index = word[i] - 'a';
+    if(temp->children[index]) {
+      temp = temp->children[index];
+    // No word of given stub exits   
+    } else {
+      return;
+    }
+    
+  }
+ 
+
+  // Populate all the words into a deque which contains the stub 
+  Deque *word_list = new_deque();
+  char copy[MAX_WORD];
+  strcpy(copy, word);
+  search_word(temp, copy, word_list);
+
+  // Print the word probability 
+  // Calculate frequency of word stub 
+  double stub_freq = temp->freq;
+  Node *current = word_list->top;
+  double word_freq = 0;
+  if(word_list->size > 0) {
+    for(int i = 0; i < word_list->size; i++) {
+      word_freq = current->frequency; 
+      printf("%.2f %s\n", word_freq / stub_freq, current->word);
+      current = current->next;
+      // Print upto top 5 frequency only 
+      if(i+1 == MAX_FREQ) {
+        break;
+      }
+    }
+  }
+
+  // Free memory used for the deque 
+  free_deque(word_list);
+  
+}
+
+
+void search_word(TrieNode *node, char text[MAX_WORD], Deque *list) {
+  // Base case - word has been found  
+  if(node->is_word || !has_children(node)) {
+    // Add word into the frequency list 
+    add_word(list, text, node->is_word);
+  }
+  // Normal case 
+  for(int i = 0; i < MAX_SIZE; i++) {
+    if(node->children[i]) {
+      // Get the length of current str 
+      int prev_len = strlen(text);
+      // Add new character into the string and pass it to the next recursive func
+      char ch = 'a' + i; 
+      strcat(text, &ch);
+      text[prev_len+1] = NULLBYTE; 
+      search_word(node->children[i], text, list);
+      // reverse the change after recursive call 
+      text[prev_len] = NULLBYTE;
+
+    }
+  }
+}
+
+
+int has_children(TrieNode *node) {
+  for(int i = 0; i < MAX_SIZE; i++) {
+    // The node has a child 
+    if(node->children[i]) {
+      return TRUE;
+    }
+  }
+
+  return FALSE;
 }

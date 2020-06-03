@@ -7,11 +7,22 @@
  */
 
 #ifndef TEXT_ANALYSIS_H
+#include "deque.h"
+#include "util.h"
+#include "hash.h"
+
+#include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
+#include <assert.h>
+
 #define TEXT_ANALYSIS_H
 #define MAX_SIZE 26
 #define TRUE 1
 #define FALSE 0 
 #define MAX_WORD 100
+#define NULLBYTE '\0'
+#define MAX_FREQ 5
 // Build a character level trie for a given set of words.
 //
 // The input to your program is an integer N followed by N lines containing
@@ -22,21 +33,46 @@
 //
 // Your program must output the pre-order traversal of the characters in
 // the trie, on a single line.
-typedef struct Node TrieNode; 
+typedef struct node_t TrieNode; 
 
-struct Node {
+struct node_t {
     TrieNode *children[MAX_SIZE];
     int freq;
-    int endWord; 
+    int is_word; 
 
 };  
 
+// ------------------------------- 2a ---------------------------------// 
 void problem_2_a();
+/** Function to create an empty trie */
 TrieNode *create_node();
+/** Function to insert word in the trie 
+ * 
+ * Paramerter: 
+ *      root - The root node of the trie 
+ *      word - The word to be inserted in the trie 
+*/
 void insert_word(TrieNode *root, char* word);
-void *read_word(); 
+/** Read words from stdin input 
+ * 
+ * Parameters: 
+ *      str - String where characters will be stored 
+ * */ 
+// void read_word(char *str); 
+
+/** Performs preorder traversal of a trie 
+ * 
+ * Parameters:
+ *      root - The node which would be traversed
+ *      index - Determines the child alphabet 
+ * */
 void preorder_traverse(TrieNode *root, int index);
-void free_node(TrieNode *root);
+/** Performs postorder traversal to free a trie */ 
+void free_trie(TrieNode *root);
+
+
+
+// ---------------------------------- 2b ------------------------------// 
 // Using the trie constructed in Part (a) this program should output all
 // prefixes of length K, in alphabetic order along with their frequencies
 // with their frequencies. The input will be:
@@ -51,8 +87,19 @@ void free_node(TrieNode *root);
 //   ...
 //   ye 1
 void problem_2_b();
+/** A function to recursively search all prefixes of a given length 
+ * 
+ * Parameters:
+ *      node - Current node of the trie to be evaluated 
+ *      level - Current depth/level of the trie 
+ *      index - Helps determine the character of the alphabet 
+ *      size - target prefix size 
+ *      prefix - An array to hold the string built recursively 
+ **/
 void recursive_search(TrieNode *node, int level, int index, int size, char prefix[]);
 
+
+//------------------------------------- 2c ----------------------------------------// 
 // Again using the trie data structure you implemented for Part (a) you will
 // provide a list (up to 5) of the most probable word completions for a given
 // word stub.
@@ -81,5 +128,28 @@ void recursive_search(TrieNode *node, int level, int index, int size, char prefi
 // If there are two strings with the same probability ties should be broken
 // alphabetically (with "a" coming before "aa").
 void problem_2_c();
+/** Function to print the probability of upto 5 most likely word given a stub
+ * 
+ * Parameters: 
+ *      root - The trie which will be searched 
+ *      word - the word stub which will be used 
+ **/
+void get_high_freq(TrieNode *root, char word[MAX_WORD]);
+/** A function to recursively search word containing a particular prefix and puts 
+ * into a deque 
+ * 
+ * Parameters: 
+ *      node - Node which will be searched
+ *      text - The string build so far recursively 
+ *      list - the deque where matching words will be put 
+ * */
+void search_word(TrieNode *node, char text[MAX_WORD], Deque *list);
+
+/** Function to check whether a node has any children 
+ * 
+ * Parameters: 
+ *  node - The node to be inspected 
+ * */
+int has_children(TrieNode *node);
 
 #endif

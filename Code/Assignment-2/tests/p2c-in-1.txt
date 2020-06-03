@@ -4,5 +4,4 @@ ab
 a
 aa
 ba
-aa
 a
