@@ -134,7 +134,7 @@ void problem_2_c();
  *      root - The trie which will be searched 
  *      word - the word stub which will be used 
  **/
-void get_high_freq(TrieNode *root, char word[MAX_WORD]);
+void get_freq(TrieNode *root, char word[MAX_WORD]);
 /** A function to recursively search word containing a particular prefix and puts 
  * into a deque 
  * 

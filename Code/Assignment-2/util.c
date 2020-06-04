@@ -3,7 +3,7 @@
  *
  * created for COMP20007 Design of Algorithms 2020
  * by Tobias Edwards <tobias.edwards@unimelb.edu.au>
- * editted by <Insert Name Here>
+ * editted by Kaif Ahsan
  */
 
 #include <stdio.h>

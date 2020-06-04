@@ -49,6 +49,7 @@ int generate_hash(char str[], int mod) {
   return result % mod;
 }
 
+// Generate particular values for a character based on their ascii value
 int generate_value(char c) {
   int value = 0;
 
@@ -65,6 +66,7 @@ int generate_value(char c) {
   
 }
 
+// Read word from the stdin 
 void read_word(char *str) {
   int size = 0;
   char c = EOF;
@@ -142,6 +144,8 @@ void problem_1_b() {
   
 }
 
+// Function to insert word into a hashtable which also signals if the word
+// was successfully placed or not
 int insert_hash(char str[], char **hash_table, int *size, int step) {
     // Generate hash value 
     int hash = generate_hash(str, *size);
@@ -164,18 +168,19 @@ int insert_hash(char str[], char **hash_table, int *size, int step) {
   return false;
 }
 
+// Function to resize a hashtable according to the resizing factor 
 char **resize_hash(char **hash_table, int *table_size, int step) {
   // Create a reference to the old table 
   char **old_table = hash_table;
   int old_size = *table_size;
-  *table_size = *table_size * 2;
+  *table_size = *table_size * RESIZING_FACTOR;
 
   // Create new hashtable 
-  char **new_table = malloc(2 * old_size * sizeof(char*)); 
-  for(int i = 0; i < 2 * old_size; i++) {
+  char **new_table = malloc(RESIZING_FACTOR * old_size * sizeof(char*)); 
+  for(int i = 0; i < RESIZING_FACTOR * old_size; i++) {
     new_table[i] = malloc(MAX_CHAR * sizeof(char));
   }
-  for(int i = 0; i < 2 * old_size; i++) {
+  for(int i = 0; i < RESIZING_FACTOR * old_size; i++) {
     strcpy(new_table[i], NULLCHAR);
   }
 
@@ -201,6 +206,7 @@ char **resize_hash(char **hash_table, int *table_size, int step) {
   return new_table;
 }
 
+// Function to free memory associated with a hashtable  
 void free_table(char **table, int size) {
   // Free individual item
   for(int i = 0; i < size; i++) {

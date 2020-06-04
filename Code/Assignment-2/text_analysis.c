@@ -63,6 +63,7 @@ TrieNode *create_node() {
   return new_node;
 }
 
+// Function to insert word into the trie 
 void insert_word(TrieNode *root, char* word) {
   int level = 0, index = 0; 
   int length = strlen(word);
@@ -149,7 +150,7 @@ void problem_2_b() {
   free_trie(root);
 }
 
-
+// Function to recursive search for prefixes with a fixed length 
 void recursive_search(TrieNode *node, int level, int index, int size, char prefix[]) {
   // Base case 
   if(level + 1 == size) {
@@ -218,12 +219,15 @@ void problem_2_c() {
 
   
   // Find the matching words with highest frequency 
-  get_high_freq(root, stub);
+  get_freq(root, stub);
+
+  // free memory used for trie 
+  free_trie(root);
 }
 
 
-
-void get_high_freq(TrieNode *root, char word[MAX_WORD]) {
+// Function to get the frequency linked list for words 
+void get_freq(TrieNode *root, char word[MAX_WORD]) {
   // Move to the end of word stub
   TrieNode *temp = root;   
   for(int i = 0; i < strlen(word); i++) {
@@ -237,8 +241,8 @@ void get_high_freq(TrieNode *root, char word[MAX_WORD]) {
     
   }
  
-
   // Populate all the words into a deque which contains the stub 
+  // Deque functionalityimplemented on top of Assignment-1 provided files  
   Deque *word_list = new_deque();
   char copy[MAX_WORD];
   strcpy(copy, word);
@@ -250,14 +254,16 @@ void get_high_freq(TrieNode *root, char word[MAX_WORD]) {
   Node *current = word_list->top;
   double word_freq = 0;
   if(word_list->size > 0) {
-    for(int i = 0; i < word_list->size; i++) {
+    int i = 0;
+    // Loop through the frequency list to calculate and print data
+    while (current)
+    {
       word_freq = current->frequency; 
       printf("%.2f %s\n", word_freq / stub_freq, current->word);
       current = current->next;
-      // Print upto top 5 frequency only 
-      if(i+1 == MAX_FREQ) {
-        break;
-      }
+      i++;
+      // Bounds to print only top 5 items 
+      if(i == MAX_FREQ) break;
     }
   }
 
@@ -267,6 +273,7 @@ void get_high_freq(TrieNode *root, char word[MAX_WORD]) {
 }
 
 
+// Function to search words containing a given stub and add it to a linked list 
 void search_word(TrieNode *node, char text[MAX_WORD], Deque *list) {
   // Base case - word has been found  
   if(node->is_word || !has_children(node)) {
@@ -291,6 +298,7 @@ void search_word(TrieNode *node, char text[MAX_WORD], Deque *list) {
 }
 
 
+// Function to check if a node has children 
 int has_children(TrieNode *node) {
   for(int i = 0; i < MAX_SIZE; i++) {
     // The node has a child 

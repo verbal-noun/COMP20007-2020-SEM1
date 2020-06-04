@@ -3,17 +3,12 @@
  *
  * created for COMP20007 Design of Algorithms 2020
  * template by Tobias Edwards <tobias.edwards@unimelb.edu.au>
- * implementation by <Insert Name Here>
+ * implementation by Kaif Ahsan
  */
-
-// You must not change any of the code already provided in this file, such as
-// type definitions, constants or functions.
-//
-// You may, however, add additional functions and/or types which you may need
-// while implementing your algorithms and data structures.
 
 #ifndef DEQUE_H
 #define DEQUE_H
+
 
 // DO NOT CHANGE THESE TYPE DEFINITIONS
 

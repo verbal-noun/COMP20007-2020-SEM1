@@ -6,12 +6,6 @@
  * implementation by Kaif Ahsan
  */
 
-// You must not change any of the code already provided in this file, such as
-// type definitions, constants or functions.
-//
-// You may, however, add additional functions and/or types which you may need
-// while implementing your algorithms and data structures.
-
 #include <assert.h>
 #include <stdio.h>
 #include <stdlib.h>
@@ -69,9 +63,10 @@ void free_node(Node *node)
 // Add new word into the frequency list 
 void add_word(Deque *deque, String word, Data data) {
   
+  Node *current = deque->top;
   // If existing deque is empty 
   if(deque->size == 0) {
-    deque_insert(deque, word, data);
+    deque_push(deque, word, data);
   }
   // if new node is greater the existing highest value 
   else if(data > deque->top->frequency) {
@@ -79,22 +74,32 @@ void add_word(Deque *deque, String word, Data data) {
     deque_push(deque, word, data);
   }
   // If new data is lower the current lowest value 
-  else if(data <= deque->bottom->frequency) {
+  else if(data <= deque->bottom->frequency && deque->size < 5) {
     deque_insert(deque, word, data);
   }
   else {
     Node *new = new_node(word, data);
-    Node *current = deque->top->next;
-    while(current) {
-      if(data > current->frequency) {
-        // Insert node at positive
-        new->prev = current->prev;
-        new->next = current; 
-        current->prev->next = new;
-        current->prev = new;
+    while(current->next != NULL && 
+    current->next->frequency >= data) {
+      if(current->next->frequency == data && 
+      !strcmp(word, current->next->word)) {
+        break;
       }
       current = current->next;
     }
+    
+    /*Make the appropriate links */
+    new->next = current->next; 
+    // if the new node is not inserted 
+    // at the end of the list 
+    if (current->next != NULL){ 
+      new->next->prev = new; 
+    }
+    else{
+      deque->bottom = new;
+    }
+    current->next = new; 
+    new->prev = current;
   }
 }
 

@@ -19,6 +19,7 @@
 #define MAX_CHAR 257
 #define ALPHABET_SIZE 26 
 #define TWO_POWER_SIX 64
+#define RESIZING_FACTOR 2
 //-------------------------------------- 1a --------------------------------//
 // Implements a solution to Problem 1 (a), which reads in from stdin:
 //   N M
